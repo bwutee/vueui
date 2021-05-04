@@ -112,6 +112,21 @@ async function init() {
             msge: `Account with email '${request.payload.email}' does not exist`,
           };
         }
+        if(request.payload.newPassword != request.payload.confirmPassword){
+          return{
+            ok: false,
+            msge: "Plese confirm if new password match"
+          };
+        }
+        const getPassword = await Account.query()
+        .where("email", request.payload.email)
+        .select("password")
+        if(request.payload.currentPassword != getPassword){
+          return{
+            ok: false,
+            msge: "Wrong current password"
+          };
+        }
 
         const updatePassword = await Account.query()
 			.where("email", request.payload.email)
