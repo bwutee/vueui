@@ -118,16 +118,17 @@ async function init() {
             msge: "Plese confirm if new password match"
           };
         }
-        const getPassword = await Account.query()
-        .where("email", request.payload.email)
-        .select("password")
-        if(request.payload.currentPassword != getPassword){
+        
+        const account = await Account.query()
+          .where("email", request.payload.email)
+          .first();
+        if (!await account.verifyPassword(request.payload.currentPassword) ){
           return{
             ok: false,
             msge: "Wrong current password"
           };
         }
-
+        
         const updatePassword = await Account.query()
 			.where("email", request.payload.email)
 			.patch({

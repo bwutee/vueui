@@ -5,7 +5,7 @@ const SALT_ROUNDS = 10;
 
 class Account extends Model {
   static get tableName() {
-    return "account";
+    return "Account";
   }
 
   // Encrypt the password before storing it in the database.
@@ -13,6 +13,9 @@ class Account extends Model {
 
   // eslint-disable-next-line no-unused-vars
   async $beforeInsert(queryContext) {
+    this.password = await hash(this.password, SALT_ROUNDS);
+  }
+  async $beforeUpdate(queryContext) {
     this.password = await hash(this.password, SALT_ROUNDS);
   }
 
